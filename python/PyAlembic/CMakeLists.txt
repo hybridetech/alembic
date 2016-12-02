@@ -33,9 +33,13 @@
 ##
 ##-*****************************************************************************
 
+INCLUDE("../../cmake/AlembicBoost.cmake")
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
+
 MESSAGE(STATUS "Boost_PYTHON_LIBRARY: ${Boost_PYTHON_LIBRARY}")
 
 # set core libs
+
 IF (Boost_PYTHON_LIBRARY AND ALEMBIC_PYTHON_LIBRARY)
     MESSAGE(STATUS "Found libboost_python: ${Boost_PYTHON_LIBRARY}")
     SET(PLIBS ${ALEMBIC_PYTHON_LIBRARY} ${Boost_PYTHON_LIBRARY})
@@ -122,6 +126,12 @@ IF (Boost_PYTHON_LIBRARY AND ALEMBIC_PYTHON_LIBRARY)
           "${CMAKE_SOURCE_DIR}/python/PyAlembic")
 
     ADD_LIBRARY(alembic SHARED ${CPP_FILES})
+
+    IF (WINDOWS)
+        ADD_DEFINITIONS(
+            -DHAVE_ROUND
+            -DBOOST_PYTHON_STATIC_LIB)
+    ENDIF()
 
     SET_TARGET_PROPERTIES(alembic
         PROPERTIES PREFIX "" SUFFIX ".so"

@@ -213,7 +213,7 @@ ENDIF()
 FIND_PACKAGE(Threads REQUIRED)
 
 # We only need boost if including PyAlembic, or using it in the lib
-IF (ALEMBIC_LIB_USES_BOOST OR USE_PYALEMBIC)
+IF (ALEMBIC_LIB_USES_BOOST)
     INCLUDE("./cmake/AlembicBoost.cmake")
     INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 ENDIF()
