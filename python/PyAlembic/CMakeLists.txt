@@ -125,19 +125,23 @@ IF (Boost_PYTHON_LIBRARY AND ALEMBIC_PYTHON_LIBRARY)
     INCLUDE_DIRECTORIES("${PYTHON_INCLUDE_DIR}" "${CMAKE_SOURCE_DIR}/lib"
           "${CMAKE_SOURCE_DIR}/python/PyAlembic")
 
-    ADD_LIBRARY(alembic SHARED ${CPP_FILES})
+    ADD_LIBRARY(pyAlembic SHARED ${CPP_FILES})
 
     IF (WINDOWS)
         ADD_DEFINITIONS(
             -DHAVE_ROUND
-            -DBOOST_PYTHON_STATIC_LIB)
+            -DBOOST_PYTHON_STATIC_LIB
+            -DBOOST_ALL_NO_LIB )
+        SET( MODSUFFIX ".pyd" )
+    ELSE()
+        SET( MODSUFFIX ".so" )
     ENDIF()
 
-    SET_TARGET_PROPERTIES(alembic
-        PROPERTIES PREFIX "" SUFFIX ".so"
+    SET_TARGET_PROPERTIES(pyAlembic
+        PROPERTIES PREFIX "" SUFFIX ${MODSUFFIX}
     )
 
-    INSTALL (TARGETS alembic
+    INSTALL (TARGETS pyAlembic
         DESTINATION lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages
     )
 
@@ -145,7 +149,7 @@ IF (Boost_PYTHON_LIBRARY AND ALEMBIC_PYTHON_LIBRARY)
         ADD_SUBDIRECTORY(Tests)
     ENDIF()
 
-    set_target_properties(alembic PROPERTIES
+    set_target_properties(pyAlembic PROPERTIES
         INSTALL_RPATH_USE_LINK_PATH TRUE
         INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
 ELSE()
